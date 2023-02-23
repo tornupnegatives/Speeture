@@ -7,7 +7,8 @@ option(SPEETURE_BUILD_TESTS "Build test programs" ON)
 include_directories(inc)
 add_library(${PROJECT_NAME}
         src/FeatureExtractor.cpp
-        src/PitchPeriodEstimator.cpp
+        src/PitchEstimator.cpp
+        src/SimplePitchEstimator.cpp
         )
 
 if (SPEETURE_BUILD_TESTS)

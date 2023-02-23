@@ -1,20 +1,18 @@
 // Author: Joseph Bellahcen <joeclb@icloud.com>
 
 #include "FeatureExtractor.h"
-#include "PitchPeriodEstimator.h"
+#include "SimplePitchEstimator.h"
 #include <algorithm>
 #include <vector>
 
 using namespace Speeture;
 
-PitchPeriodEstimator::PitchPeriodEstimator(PitchPeriodEstimators _algorithm, unsigned int sampleRate,
-                                           unsigned int minPitchHz, unsigned int maxPitchHz) {
+// Initialize a simple time-domain PitchEstimator based on correlation and difference algorithms
+SimplePitchEstimator::SimplePitchEstimator(SimplePitchAlgorithms _algorithm, unsigned int sampleRate, unsigned int minPitchHz, unsigned int maxPitchHz) : PitchEstimator(sampleRate, minPitchHz, maxPitchHz) {
     algorithm = _algorithm;
-    maxPitchPeriod = sampleRate / minPitchHz;
-    minPitchPeriod = sampleRate / maxPitchHz;
 }
 
-unsigned int PitchPeriodEstimator::prediction(const std::vector<float> &segment) {
+unsigned int SimplePitchEstimator::estimatePeriod(const std::vector<float> &segment) {
     auto featureExtractor = FeatureExtractor(segment.size());
     unsigned int pitchPeriod;
 
@@ -58,7 +56,7 @@ unsigned int PitchPeriodEstimator::prediction(const std::vector<float> &segment)
     return pitchPeriod;
 }
 
-unsigned int PitchPeriodEstimator::findFirstLocalMax(const std::vector<float> &segment) {
+unsigned int SimplePitchEstimator::findFirstLocalMax(const std::vector<float> &segment) {
     // Place the search head at the first local minimum
     auto localMin = std::min_element(segment.begin(), segment.end());
     auto localMaxIdx = int(std::distance(segment.begin(), std::max_element(localMin, segment.end())));
@@ -66,7 +64,7 @@ unsigned int PitchPeriodEstimator::findFirstLocalMax(const std::vector<float> &s
     return localMaxIdx;
 }
 
-unsigned int PitchPeriodEstimator::findFirstLocalMin(const std::vector<float> &segment) {
+unsigned int SimplePitchEstimator::findFirstLocalMin(const std::vector<float> &segment) {
     // Place the search head at the first local maximum
     auto localMax = std::max_element(segment.begin(), segment.end());
     auto localMaxIdx = int(std::distance(segment.begin(), localMax));

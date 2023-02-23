@@ -16,7 +16,7 @@ file(GLOB SRC_FILES ${PROJECT_SOURCE_DIR}/src/*.cpp)
 include_directories(../inc)
 add_executable(Speeture-Test
         ${SRC_FILES}
-        test/PitchPeriodEstimatorTests.cpp
+        test/SimplePitchEstimatorTests.cpp
         )
 
 target_link_libraries(
